@@ -34,4 +34,21 @@
 └── README.md  
 ```
 
+### 项目设置
+
+```
+//设置代理
+vim /etc/profile
+
+export GOPROXY=https://goproxy.cn
+
+//进入项目，执行
+go mod download
+
+//后台运行并输出日志
+nohup go run main.go > log.out 2>&1 &
+
+//后台运行
+nohup go run main.go >/dev/null 2>&1 &
+```
 
