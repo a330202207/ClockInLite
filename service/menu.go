@@ -17,7 +17,7 @@ type TopMenuInfo struct {
 }
 
 type SubMenuInfo struct {
-	ParentId        int    `form:"p_id" json:"p_id" binding:"required"`
+	ParentId int `form:"p_id" json:"p_id" binding:"required"`
 	TopMenuInfo
 	MenuRouter string `form:"menu_router" json:"menu_router" binding:"required"`
 }
@@ -58,7 +58,7 @@ func (menuInfo *SubMenuInfo) SubMenuAdd() int {
 	}
 
 	menu := model.Menu{
-		ParentId:        menuInfo.ParentId,
+		ParentId:   menuInfo.ParentId,
 		Name:       menuInfo.Name,
 		MenuRouter: menuInfo.MenuRouter,
 		OrderBy:    menuInfo.OrderBy,
@@ -95,11 +95,11 @@ func (menuInfo *MenuId) MenuEdit() (model.Menu, int) {
 }
 
 //保存顶级菜单
-func (TopMenu *TopMenu) TopMenuSave() int {
-	id := TopMenu.ID
+func (topMenu *TopMenu) TopMenuSave() int {
+	id := topMenu.ID
 	menu := model.Menu{
-		Name:    TopMenu.Name,
-		OrderBy: TopMenu.OrderBy,
+		Name:    topMenu.Name,
+		OrderBy: topMenu.OrderBy,
 	}
 	if err := model.SaveMenu(id, menu); err != nil {
 		return error.ERROR_SQL_UPDATE_FAIL
@@ -111,7 +111,7 @@ func (TopMenu *TopMenu) TopMenuSave() int {
 func (menuInfo *SubMenu) SubMenuSave() int {
 	id := menuInfo.ID
 	menu := model.Menu{
-		ParentId:        menuInfo.ParentId,
+		ParentId:   menuInfo.ParentId,
 		Name:       menuInfo.Name,
 		MenuRouter: menuInfo.MenuRouter,
 		OrderBy:    menuInfo.OrderBy,

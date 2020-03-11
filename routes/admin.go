@@ -27,7 +27,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 		//删除管理员
 		admin.POST("/admin/del", backend.AdminDel)
 
-		//编辑管理员页
+		//编辑管理员
 		admin.GET("/admin/edit", backend.AdminEdit)
 
 		//保存管理员信息
@@ -51,7 +51,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 		//获取当前角色菜单
 		admin.GET("/role/myMenus", backend.MyMenus)
 
-		//菜单列表页
+		//菜单列表
 		admin.GET("/menu/list", backend.GetMenuList)
 
 		//获取菜单树结构
@@ -74,6 +74,21 @@ func RegisterAdminRouter(e *gin.Engine) {
 
 		//保存子菜单
 		admin.POST("/menu/saveSub", backend.SubMenuSave)
+
+		//添加分类
+		admin.POST("/category/add", backend.AddCategory)
+
+		//删除分类
+		admin.POST("/category/del", backend.DelCategory)
+
+		//编辑分类
+		admin.GET("/category/edit", backend.EditCategory)
+
+		//保存分类
+		admin.POST("/category/save", backend.SaveCategory)
+
+		//分类列表
+		admin.GET("/category/list", backend.CategoryList)
 
 	}
 }

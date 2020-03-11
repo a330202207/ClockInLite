@@ -35,14 +35,13 @@ func GetToken(c *gin.Context) {
 	}
 
 	type info struct {
-		Token string `json:"token"`
-		ExpireTime int64 `json:"expire_Time"`
+		Token      string `json:"token"`
+		ExpireTime int64  `json:"expire_Time"`
 	}
 
-
 	util.JsonSuccessResponse(c, info{
-		Token:token,
-		ExpireTime:expireTime,
+		Token:      token,
+		ExpireTime: expireTime,
 	})
 }
 

@@ -33,7 +33,7 @@ func GetAdminList(c *gin.Context) {
 func AdminAdd(c *gin.Context) {
 	var admin service.Admin
 	admin.AdminInfo.CreateIp = c.ClientIP()
-	if err := c.BindJSON(&admin); err == nil {
+	if err := c.ShouldBindJSON(&admin); err == nil {
 		resCode := admin.AdminAdd()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -44,15 +44,13 @@ func AdminAdd(c *gin.Context) {
 //删除管理员
 func AdminDel(c *gin.Context) {
 	var AdminId service.AdminId
-	if err := c.BindJSON(&AdminId); err == nil {
+	if err := c.ShouldBindJSON(&AdminId); err == nil {
 		resCode := AdminId.AdminDel()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
-
-
 
 //编辑管理员页
 func AdminEdit(c *gin.Context) {
@@ -77,9 +75,9 @@ func AdminEdit(c *gin.Context) {
 			}
 
 			util.JsonSuccessResponse(c, AdminEditInfo{
-				RolesInfo:   roles,
-				MyRoles: myRoles,
-				Info:    info,
+				RolesInfo: roles,
+				MyRoles:   myRoles,
+				Info:      info,
 			})
 		}
 	} else {
@@ -91,7 +89,7 @@ func AdminEdit(c *gin.Context) {
 //保存管理员
 func AdminSave(c *gin.Context) {
 	var admin service.Account
-	if err := c.BindJSON(&admin); err == nil {
+	if err := c.ShouldBindJSON(&admin); err == nil {
 		resCode := admin.AdminSave()
 		util.HtmlResponse(c, resCode)
 	} else {

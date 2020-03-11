@@ -6,7 +6,7 @@ import (
 )
 
 type RoleId struct {
-	ID       int      `form:"id" json:"id" binding:"required"`
+	ID int `form:"id" json:"id" binding:"required"`
 }
 
 type RoleName struct {

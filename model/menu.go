@@ -2,17 +2,17 @@ package model
 
 type Menu struct {
 	ID         int    `gorm:"primary_key" json:"id"`
-	ParentId   int    `gorm:"default:0" json:"p_id"`         //上级ID
-	Name       string `gorm:"default:''" json:"name"`        //菜单名称
-	MenuRouter string `gorm:"default:''" json:"menu_router"` //菜单访问路由
-	OrderBy    int    `gorm:"default:'0'" json:"order_by"`   //菜单访问路由
+	ParentId   int    `gorm:"default:0"   json:"p_id"`        //上级ID
+	Name       string `gorm:"default:''"  json:"name"`        //菜单名称
+	MenuRouter string `gorm:"default:''"  json:"menu_router"` //菜单访问路由
+	OrderBy    int    `gorm:"default:'0'" json:"order_by"`    //排序
 	CreatedAt  int    `json:"created_at"`
 	UpdatedAt  int    `json:"updated_at"`
 }
 
 type TreeMenus struct {
 	ID         int          `json:"id"`
-	PID        int          `json:"p_id"`        //上级ID
+	ParentId   int          `json:"p_id"`        //上级ID
 	Name       string       `json:"text"`        //菜单名称
 	MenuRouter string       `json:"menu_router"` //菜单访问路由
 	OrderBy    int          `json:"order_by"`    //菜单访问路由
@@ -55,7 +55,7 @@ func (r *Menu) GetTreeMenus(pid interface{}) []*TreeMenus {
 		child := v.GetTreeMenus(v.ID)
 		node := &TreeMenus{
 			ID:         v.ID,
-			PID:        v.ParentId,
+			ParentId:   v.ParentId,
 			Name:       v.Name,
 			MenuRouter: v.MenuRouter,
 			OrderBy:    v.OrderBy,

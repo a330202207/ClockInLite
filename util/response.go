@@ -20,8 +20,8 @@ type ResponseModelBase struct {
 }
 
 type ResponsePageData struct {
-	Total   int      `json:"total"`
-	List    interface{} `json:"list"`
+	Total int         `json:"total"`
+	List  interface{} `json:"list"`
 }
 
 //json返回格式
@@ -34,8 +34,8 @@ func JsonSuccessPage(c *gin.Context, total int, list interface{}) {
 		Code: error.SUCCESS,
 		Msg:  error.GetMsg(error.SUCCESS),
 		Data: ResponsePageData{
-			Total:   total,
-			List:    list,
+			Total: total,
+			List:  list,
 		},
 	}
 

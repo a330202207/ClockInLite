@@ -18,12 +18,14 @@ var MsgFlags = map[int]string{
 	ERROR_DISABLE_USER:   "用户已被禁止，请联系管理员",
 	ERROR_PASSWORD_USER:  "密码加密失败",
 
-
 	ERROR_EXIST_ROLE:     "角色已存在",
 	ERROR_NOT_EXIST_ROLE: "角色不存在",
 
 	ERROR_EXIST_MENU:     "菜单已存在",
 	ERROR_NOT_EXIST_MENU: "菜单不存在",
+
+	ERROR_EXIST_CATEGORY:     "分类已存在",
+	ERROR_NOT_EXIST_CATEGORY: "分类不存在",
 
 	ERROR_SQL_INSERT_FAIL: "数据插入失败",
 	ERROR_SQL_DELETE_FAIL: "数据删除失败",

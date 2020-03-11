@@ -33,7 +33,7 @@ func GetRoleList(c *gin.Context) {
 //添加角色
 func RoleAdd(c *gin.Context) {
 	var role service.RoleMenu
-	if err := c.BindJSON(&role); err == nil {
+	if err := c.ShouldBindJSON(&role); err == nil {
 		resCode := role.RoleAdd()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -44,7 +44,7 @@ func RoleAdd(c *gin.Context) {
 //删除角色
 func RoleDel(c *gin.Context) {
 	var role service.RoleId
-	if err := c.BindJSON(&role); err == nil {
+	if err := c.ShouldBindJSON(&role); err == nil {
 		resCode := role.RoleDel()
 		fmt.Println(resCode)
 		util.HtmlResponse(c, resCode)
@@ -67,9 +67,9 @@ func RoleEdit(c *gin.Context) {
 			myMenus, _ := model.GetRoleMenus(map[string]interface{}{"role_id": id})
 
 			type RoleEditInfo struct {
-				Menus interface{} `json:"menus"`
-				MyMenus   interface{} `json:"my_menus"`
-				Info      interface{} `json:"role_info"`
+				Menus   interface{} `json:"menus"`
+				MyMenus interface{} `json:"my_menus"`
+				Info    interface{} `json:"role_info"`
 			}
 
 			util.JsonSuccessResponse(c, RoleEditInfo{
@@ -93,7 +93,7 @@ func MyMenus(c *gin.Context) {
 //保存角色
 func RoleSave(c *gin.Context) {
 	var role service.RoleInfo
-	if err := c.BindJSON(&role); err == nil {
+	if err := c.ShouldBindJSON(&role); err == nil {
 		resCode := role.RoleSave()
 		util.HtmlResponse(c, resCode)
 	} else {

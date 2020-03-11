@@ -23,9 +23,9 @@ func GetMenuList(c *gin.Context) {
 }
 
 //添加顶级菜单
-func TopMenuAdd(c *gin.Context)  {
+func TopMenuAdd(c *gin.Context) {
 	var menu service.TopMenuInfo
-	if err := c.BindJSON(&menu); err == nil {
+	if err := c.ShouldBindJSON(&menu); err == nil {
 		resCode := menu.TopMenuAdd()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -36,7 +36,7 @@ func TopMenuAdd(c *gin.Context)  {
 //添加子菜单
 func SubMenuAdd(c *gin.Context) {
 	var menu service.SubMenuInfo
-	if err := c.BindJSON(&menu); err == nil {
+	if err := c.ShouldBindJSON(&menu); err == nil {
 		resCode := menu.SubMenuAdd()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -47,7 +47,7 @@ func SubMenuAdd(c *gin.Context) {
 //删除菜单
 func MenuDel(c *gin.Context) {
 	var menu service.MenuId
-	if err := c.BindJSON(&menu); err == nil {
+	if err := c.ShouldBindJSON(&menu); err == nil {
 		resCode := menu.MenuDel()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -70,13 +70,13 @@ func MenuEdit(c *gin.Context) {
 				util.JsonSuccessResponse(c, info)
 			} else {
 				type MenuEditInfo struct {
-					ParentMenu   interface{} `json:"parent_menu"`
-					Info      interface{} `json:"menu_info"`
+					ParentMenu interface{} `json:"parent_menu"`
+					Info       interface{} `json:"menu_info"`
 				}
 				ParentMenu, _ := model.GetMenu(map[string]interface{}{"id": info.ParentId})
 				util.JsonSuccessResponse(c, MenuEditInfo{
 					ParentMenu: ParentMenu,
-					Info:    info,
+					Info:       info,
 				})
 			}
 		}
@@ -88,7 +88,7 @@ func MenuEdit(c *gin.Context) {
 //保存顶级菜单
 func TopMenuSave(c *gin.Context) {
 	var menu service.TopMenu
-	if err := c.BindJSON(&menu); err == nil {
+	if err := c.ShouldBindJSON(&menu); err == nil {
 		resCode := menu.TopMenuSave()
 		util.HtmlResponse(c, resCode)
 	} else {
@@ -99,7 +99,7 @@ func TopMenuSave(c *gin.Context) {
 //保存子菜单
 func SubMenuSave(c *gin.Context) {
 	var menu service.SubMenu
-	if err := c.BindJSON(&menu); err == nil {
+	if err := c.ShouldBindJSON(&menu); err == nil {
 		resCode := menu.SubMenuSave()
 		util.HtmlResponse(c, resCode)
 	} else {
