@@ -6,7 +6,6 @@ import (
 	"ClockInLite/package/error"
 	"ClockInLite/service"
 	"ClockInLite/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -18,7 +17,6 @@ func AddCategory(c *gin.Context) {
 		resCode := category.AddCategory()
 		util.HtmlResponse(c, resCode)
 	} else {
-		fmt.Println("err:", err)
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }

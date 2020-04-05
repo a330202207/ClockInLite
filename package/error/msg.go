@@ -27,6 +27,9 @@ var MsgFlags = map[int]string{
 	ERROR_EXIST_CATEGORY:     "分类已存在",
 	ERROR_NOT_EXIST_CATEGORY: "分类不存在",
 
+	ERROR_EXIST_PRODUCT:     "商品已存在",
+	ERROR_NOT_EXIST_PRODUCT: "商品不存在",
+
 	ERROR_SQL_INSERT_FAIL: "数据插入失败",
 	ERROR_SQL_DELETE_FAIL: "数据删除失败",
 	ERROR_SQL_UPDATE_FAIL: "数据修改失败",

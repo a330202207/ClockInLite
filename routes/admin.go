@@ -90,5 +90,17 @@ func RegisterAdminRouter(e *gin.Engine) {
 		//分类列表
 		admin.GET("/category/list", backend.CategoryList)
 
+		//商品列表
+		admin.GET("/product/list", backend.ProductList)
+
+		//添加商品
+		admin.POST("/product/add", backend.AddProduct)
+
+		//删除商品
+		admin.POST("/product/del", backend.DelProduct)
+
+		//保存商品
+		admin.POST("/product/save", backend.SaveProduct)
+
 	}
 }

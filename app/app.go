@@ -2,7 +2,6 @@ package app
 
 import (
 	"ClockInLite/config"
-	"ClockInLite/middleware/casbin"
 	"ClockInLite/model"
 	"ClockInLite/routes"
 	"fmt"
@@ -19,7 +18,7 @@ func Init() *gin.Engine {
 	LoadServer()
 
 	//初始化权限
-	casbin.InitCasbin()
+	//casbin.InitCasbin()
 
 	//初始化路由
 	routes.InitRouter(engine)

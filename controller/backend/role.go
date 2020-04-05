@@ -46,7 +46,6 @@ func RoleDel(c *gin.Context) {
 	var role service.RoleId
 	if err := c.ShouldBindJSON(&role); err == nil {
 		resCode := role.RoleDel()
-		fmt.Println(resCode)
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
