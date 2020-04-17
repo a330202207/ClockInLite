@@ -71,7 +71,7 @@ func (menuInfo *SubMenuInfo) SubMenuAdd() int {
 }
 
 //删除菜单
-func (menuInfo *MenuId) MenuDel() int {
+func (menuInfo *MenuId) DelMenu() int {
 	id := map[string]interface{}{"id": menuInfo.ID}
 	isExist := model.ExistMenu(id)
 	if isExist == false {
@@ -85,8 +85,8 @@ func (menuInfo *MenuId) MenuDel() int {
 	return error.SUCCESS
 }
 
-//编辑菜单
-func (menuInfo *MenuId) MenuEdit() (model.Menu, int) {
+//获取菜单
+func (menuInfo *MenuId) GetMenu() (model.Menu, int) {
 	menu, err := model.GetMenu(map[string]interface{}{"id": menuInfo.ID})
 	if err != nil {
 		return menu, error.ERROR_NOT_EXIST_MENU
@@ -95,7 +95,7 @@ func (menuInfo *MenuId) MenuEdit() (model.Menu, int) {
 }
 
 //保存顶级菜单
-func (topMenu *TopMenu) TopMenuSave() int {
+func (topMenu *TopMenu) SaveTopMenu() int {
 	id := topMenu.ID
 	menu := model.Menu{
 		Name:    topMenu.Name,
@@ -108,7 +108,7 @@ func (topMenu *TopMenu) TopMenuSave() int {
 }
 
 //保存子菜单
-func (menuInfo *SubMenu) SubMenuSave() int {
+func (menuInfo *SubMenu) SaveSubMenu() int {
 	id := menuInfo.ID
 	menu := model.Menu{
 		ParentId:   menuInfo.ParentId,

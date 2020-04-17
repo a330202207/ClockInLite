@@ -29,6 +29,7 @@ func JsonResponse(c *gin.Context, httpCode int, v interface{}) {
 	c.JSON(httpCode, v)
 }
 
+//分页响应格式
 func JsonSuccessPage(c *gin.Context, total int, list interface{}) {
 	ret := ResponseModel{
 		Code: error.SUCCESS,
@@ -42,7 +43,7 @@ func JsonSuccessPage(c *gin.Context, total int, list interface{}) {
 	JsonResponse(c, http.StatusOK, &ret)
 }
 
-// 响应成功
+//响应成功
 func JsonSuccessResponse(c *gin.Context, data interface{}) {
 
 	ret := ResponseModel{
@@ -53,7 +54,7 @@ func JsonSuccessResponse(c *gin.Context, data interface{}) {
 	JsonResponse(c, http.StatusOK, &ret)
 }
 
-// 响应失败
+//响应失败
 func JsonErrResponse(c *gin.Context, errCode int) {
 	ret := ResponseModelBase{
 		Code: errCode,

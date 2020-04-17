@@ -6,13 +6,12 @@ import (
 	"ClockInLite/package/error"
 	"ClockInLite/service"
 	"ClockInLite/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
 //商品列表
-func ProductList(c *gin.Context) {
+func GetProductList(c *gin.Context) {
 	data := map[string]interface{}{}
 	status, _ := strconv.Atoi(c.DefaultQuery("status", "0"))
 	name := c.DefaultQuery("name", "")
@@ -36,12 +35,27 @@ func ProductList(c *gin.Context) {
 		data["created_at >="] = startTime
 		data["created_at <="] = endTime
 	}
-	fmt.Println(data)
 
 	query, args, _ := util.WhereBuild(data)
 	Product, count, _ := model.GetProductList(pageSize, Offset, "id asc", query, args...)
 
 	util.JsonSuccessPage(c, count, Product)
+}
+
+//获取商品
+func GetProduct(c *gin.Context) {
+	var product service.ProductId
+	id, err := strconv.Atoi(c.Query("id"))
+	if id != 0 || err != nil {
+		product.ID = id
+		if info, errCode := product.GetProduct(); errCode != 200 {
+			util.JsonErrResponse(c, errCode)
+		} else {
+			util.JsonSuccessResponse(c, info)
+		}
+	} else {
+		util.JsonErrResponse(c, error.INVALID_PARAMS)
+	}
 }
 
 //添加商品
@@ -51,7 +65,6 @@ func AddProduct(c *gin.Context) {
 		resCode := product.AddProduct()
 		util.HtmlResponse(c, resCode)
 	} else {
-		fmt.Println("err:", err)
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }

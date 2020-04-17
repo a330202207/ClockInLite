@@ -1,12 +1,20 @@
 package config
 
 import (
+	"fmt"
 	"github.com/go-ini/ini"
 	"log"
 	"time"
 )
 
 var cfg *ini.File
+
+type App struct {
+	StorageRootPath string
+	RuntimeRootPath string
+}
+
+var AppSetting = &App{}
 
 type Database struct {
 	Type        string
@@ -41,8 +49,7 @@ type Server struct {
 	JwtApiTimeout   int64
 	ViewUrl         string
 
-	TimeZone string
-
+	TimeZone     string
 	SessionName  string
 	SessionStore string
 
@@ -52,13 +59,25 @@ type Server struct {
 
 var ServerSetting = &Server{}
 
+type File struct {
+	ImagePrefixUrl string
+	ImageSavePath  string
+	ImageMovePath  string
+	ImageMaxSize   int
+	ImageAllowExt  []string
+}
+
+var FileSetting = &File{}
+
 func init() {
 	var err error
 	//读取配置
 	cfg, err = ini.Load("config/config.ini")
 	if err != nil {
-		log.Fatalf("无法解析 'conf/config.ini':%v ", err)
+		log.Fatalf("无法解析 'config/config.ini':%v ", err)
 	}
+
+	fmt.Println("cfg:", cfg)
 
 	//加载服务
 	loadServer()
@@ -69,7 +88,9 @@ func init() {
 
 //加载服务
 func loadServer() {
+	mapToSection("app", AppSetting)
 	mapToSection("server", ServerSetting)
+	mapToSection("file", FileSetting)
 	mapToSection("database", DatabaseSetting)
 	mapToSection("redis", RedisSetting)
 }

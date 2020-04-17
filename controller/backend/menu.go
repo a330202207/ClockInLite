@@ -45,24 +45,24 @@ func SubMenuAdd(c *gin.Context) {
 }
 
 //删除菜单
-func MenuDel(c *gin.Context) {
+func DelMenu(c *gin.Context) {
 	var menu service.MenuId
 	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.MenuDel()
+		resCode := menu.DelMenu()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
 
-//编辑菜单页
-func MenuEdit(c *gin.Context) {
+//获取菜单页
+func GetMenu(c *gin.Context) {
 	var menu service.MenuId
 	id, err := strconv.Atoi(c.Query("id"))
 
 	if id != 0 || err != nil {
 		menu.ID = id
-		if info, errCode := menu.MenuEdit(); errCode != 200 {
+		if info, errCode := menu.GetMenu(); errCode != 200 {
 			util.JsonErrResponse(c, errCode)
 		} else {
 			//顶级菜单
@@ -86,10 +86,10 @@ func MenuEdit(c *gin.Context) {
 }
 
 //保存顶级菜单
-func TopMenuSave(c *gin.Context) {
+func SaveTopMenu(c *gin.Context) {
 	var menu service.TopMenu
 	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.TopMenuSave()
+		resCode := menu.SaveTopMenu()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
@@ -97,10 +97,10 @@ func TopMenuSave(c *gin.Context) {
 }
 
 //保存子菜单
-func SubMenuSave(c *gin.Context) {
+func SaveSubMenu(c *gin.Context) {
 	var menu service.SubMenu
 	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.SubMenuSave()
+		resCode := menu.SaveSubMenu()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
@@ -109,8 +109,6 @@ func SubMenuSave(c *gin.Context) {
 
 //获取菜单树
 func GetTreeMenus(c *gin.Context) {
-
 	list := service.GetTreeMenus()
-
 	util.JsonSuccessResponse(c, list)
 }

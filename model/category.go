@@ -38,6 +38,12 @@ func GetCategory(maps interface{}) (category Category, err error) {
 	return
 }
 
+//获取多个分类
+func GetCategories(maps interface{}) (list []Category, err error) {
+	err = DB.Unscoped().Where(maps).Find(&list).Error
+	return
+}
+
 //删除分类
 func DelCategory(maps interface{}) (err error) {
 	err = DB.Where(maps).Unscoped().Delete(&Category{}).Error

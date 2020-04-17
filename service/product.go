@@ -63,6 +63,15 @@ func (productId *ProductId) ProductDel() int {
 	return error.SUCCESS
 }
 
+//获取商品
+func (productId *ProductId) GetProduct() (model.Product, int) {
+	productInfo, err := model.GetProduct(map[string]interface{}{"id": productId.ID})
+	if err != nil {
+		return productInfo, error.ERROR_NOT_EXIST_PRODUCT
+	}
+	return productInfo, error.SUCCESS
+}
+
 //保存商品
 func (product *Product) ProductSave() int {
 	id := product.ID

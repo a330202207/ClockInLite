@@ -42,10 +42,10 @@ type AdminInfo struct {
 }
 
 type LoggedInfo struct {
-	Token     string        `json:"token"`
-	AdminID   int           `json:"user_id"`
-	AdminName string        `json:"user_name"`
-	Menus     [] model.Menu `json:"menus"`
+	Token     string       `json:"token"`
+	AdminID   int          `json:"user_id"`
+	AdminName string       `json:"user_name"`
+	Menus     []model.Menu `json:"menus"`
 }
 
 //登陆
@@ -87,7 +87,7 @@ func CheckStatus(status int) bool {
 }
 
 //添加用户
-func (admin *Admin) AdminAdd() int {
+func (admin *Admin) AddAdmin() int {
 	whereMap := map[string]interface{}{"user_name": admin.UserName.UserName, "status": 1}
 	isExist := model.ExistAdmin(whereMap)
 	if isExist == true {
@@ -127,7 +127,7 @@ func SetPassword(password string) (string, bool) {
 }
 
 //删除管理员
-func (adminId *AdminId) AdminDel() int {
+func (adminId *AdminId) DelAdmin() int {
 	whereMap := map[string]interface{}{"id": adminId.ID, "status": 1}
 	isExist := model.ExistAdmin(whereMap)
 	if isExist == false {
@@ -146,8 +146,8 @@ func (adminId *AdminId) AdminDel() int {
 	return error.SUCCESS
 }
 
-//编辑管理员
-func (adminId *AdminId) AdminEdit() (model.Admin, int) {
+//获取管理员
+func (adminId *AdminId) GetAdmin() (model.Admin, int) {
 	adminInfo, err := model.GetAdmin(map[string]interface{}{"id": adminId.ID})
 	if err != nil {
 		return adminInfo, error.ERROR
@@ -156,7 +156,7 @@ func (adminId *AdminId) AdminEdit() (model.Admin, int) {
 }
 
 //保存管理员
-func (account *Account) AdminSave() int {
+func (account *Account) SaveAdmin() int {
 	id := account.ID
 	admin := model.Admin{
 		UserName: account.UserName.UserName,

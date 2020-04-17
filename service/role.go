@@ -24,7 +24,7 @@ type RoleMenu struct {
 }
 
 //添加角色
-func (roleInfo *RoleMenu) RoleAdd() int {
+func (roleInfo *RoleMenu) AddRole() int {
 	name := map[string]interface{}{"name": roleInfo.Name, "status": 1}
 	isExist := model.ExistRole(name)
 
@@ -49,7 +49,7 @@ func (roleInfo *RoleMenu) RoleAdd() int {
 }
 
 //删除角色
-func (role *RoleId) RoleDel() int {
+func (role *RoleId) DelRole() int {
 	whereMap := map[string]interface{}{"id": role.ID, "status": 1}
 	isExist := model.ExistRole(whereMap)
 	if isExist == false {
@@ -68,8 +68,8 @@ func (role *RoleId) RoleDel() int {
 	return error.SUCCESS
 }
 
-//编辑角色
-func (role *RoleId) RoleEdit() (model.Role, int) {
+//获取角色
+func (role *RoleId) GetRole() (model.Role, int) {
 	roleInfo, err := model.GetRole(map[string]interface{}{"id": role.ID})
 	if err != nil {
 		return roleInfo, error.ERROR_NOT_EXIST_ROLE
@@ -78,7 +78,7 @@ func (role *RoleId) RoleEdit() (model.Role, int) {
 }
 
 //保存角色
-func (roleInfo *RoleInfo) RoleSave() int {
+func (roleInfo *RoleInfo) SaveRole() int {
 	id := roleInfo.ID
 	role := model.Role{
 		Name: roleInfo.Name,

@@ -33,6 +33,14 @@ var MsgFlags = map[int]string{
 	ERROR_SQL_INSERT_FAIL: "数据插入失败",
 	ERROR_SQL_DELETE_FAIL: "数据删除失败",
 	ERROR_SQL_UPDATE_FAIL: "数据修改失败",
+
+	ERROR_UPLOAD_IMAGE_FAIL:       "上传图片失败",
+	ERROR_UPLOAD_CHECK_IMAGE_FAIL: "检查图片失败",
+	ERROR_UPLOAD_IMAGE_EXT_ERR:    "图片格式错误",
+	ERROR_UPLOAD_IMAGE_SIZE_ERR:   "图片大小错误",
+	ERROR_NOT_EXIST_IMAGE:         "图片不存在",
+	ERROR_DEL_IMAGE_FAIL:          "删除图片失败",
+	ERROR_MOVE_IMAGE_FAIL:         "删除图片失败",
 }
 
 //获取信息码

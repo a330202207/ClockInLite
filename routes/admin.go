@@ -2,11 +2,16 @@ package routes
 
 import (
 	"ClockInLite/controller/backend"
+	"ClockInLite/package/upload"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 //后台
 func RegisterAdminRouter(e *gin.Engine) {
+
+	e.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+
 	admin := e.Group("/admin")
 	{
 		//登录
@@ -19,40 +24,40 @@ func RegisterAdminRouter(e *gin.Engine) {
 		admin.GET("/index", backend.Index)
 
 		//管理员列表
-		admin.GET("/admin/list", backend.GetAdminList)
+		admin.GET("/get/adminList", backend.GetAdminList)
 
 		//添加管理员
-		admin.POST("/admin/add", backend.AdminAdd)
+		admin.POST("/add/admin", backend.AddAdmin)
 
 		//删除管理员
-		admin.POST("/admin/del", backend.AdminDel)
+		admin.POST("del/admin", backend.DelAdmin)
 
-		//编辑管理员
-		admin.GET("/admin/edit", backend.AdminEdit)
+		//获取管理员
+		admin.GET("/get/admin", backend.GetAdmin)
 
 		//保存管理员信息
-		admin.POST("/admin/save", backend.AdminSave)
+		admin.POST("/save/admin", backend.SaveAdmin)
 
 		//角色列表
-		admin.GET("/role/list", backend.GetRoleList)
+		admin.GET("/get/roleList", backend.GetRoleList)
 
 		//添加角色
-		admin.POST("/role/add", backend.RoleAdd)
+		admin.POST("/add/role", backend.AddRole)
 
 		//删除角色
-		admin.POST("/role/del", backend.RoleDel)
+		admin.POST("/del/role", backend.DelRole)
 
-		//编辑角色页
-		admin.GET("/role/edit", backend.RoleEdit)
+		//获取角色页
+		admin.GET("/get/role", backend.GetRole)
 
 		//保存角色
-		admin.POST("/role/save", backend.RoleSave)
+		admin.POST("/save/role", backend.SaveRole)
 
 		//获取当前角色菜单
-		admin.GET("/role/myMenus", backend.MyMenus)
+		admin.GET("/get/role/menus", backend.GetRoleMenus)
 
 		//菜单列表
-		admin.GET("/menu/list", backend.GetMenuList)
+		admin.GET("/get/menuList", backend.GetMenuList)
 
 		//获取菜单树结构
 		admin.GET("/menu/menus", backend.GetTreeMenus)
@@ -64,43 +69,58 @@ func RegisterAdminRouter(e *gin.Engine) {
 		admin.POST("/menu/addSub", backend.SubMenuAdd)
 
 		//删除菜单
-		admin.POST("/menu/del", backend.MenuDel)
+		admin.POST("/del/menu", backend.DelMenu)
 
-		//编辑菜单页
-		admin.GET("/menu/edit", backend.MenuEdit)
+		//获取菜单页
+		admin.GET("/get/menu", backend.GetMenu)
 
 		//保存顶级菜单
-		admin.POST("/menu/saveTop", backend.TopMenuSave)
+		admin.POST("/save/topMenu", backend.SaveTopMenu)
 
 		//保存子菜单
-		admin.POST("/menu/saveSub", backend.SubMenuSave)
+		admin.POST("/save/subMenu/", backend.SaveSubMenu)
 
 		//添加分类
-		admin.POST("/category/add", backend.AddCategory)
+		admin.POST("/add/category", backend.AddCategory)
 
 		//删除分类
-		admin.POST("/category/del", backend.DelCategory)
+		admin.POST("/del/category/", backend.DelCategory)
 
-		//编辑分类
-		admin.GET("/category/edit", backend.EditCategory)
+		//获取分类
+		admin.GET("/get/category", backend.GetCategory)
 
 		//保存分类
-		admin.POST("/category/save", backend.SaveCategory)
+		admin.POST("/save/category", backend.SaveCategory)
 
-		//分类列表
-		admin.GET("/category/list", backend.CategoryList)
+		//获取分类列表
+		admin.GET("/get/categoryList", backend.GetCategoryList)
 
-		//商品列表
-		admin.GET("/product/list", backend.ProductList)
+		//获取多个分类
+		admin.GET("/get/categories", backend.GetCategories)
 
-		//添加商品
-		admin.POST("/product/add", backend.AddProduct)
+		//获取商品列表
+		admin.GET("/get/productList", backend.GetProductList)
+
+		//获取商品
+		admin.GET("/get/product", backend.GetProduct)
 
 		//删除商品
-		admin.POST("/product/del", backend.DelProduct)
+		admin.POST("/del/product", backend.DelProduct)
 
 		//保存商品
-		admin.POST("/product/save", backend.SaveProduct)
+		admin.POST("/save/product/", backend.SaveProduct)
+
+		//添加商品
+		admin.POST("/add/product/", backend.AddProduct)
+
+		//上传图片
+		admin.POST("/upload/img", backend.UploadImg)
+
+		//删除图片
+		admin.POST("/del/img", backend.DelImg)
+
+		//删除图片（软删除）
+		admin.POST("/move/img", backend.MoveImg)
 
 	}
 }

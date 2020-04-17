@@ -39,7 +39,7 @@ func (categoryInfo *CategoryInfo) AddCategory() int {
 }
 
 //删除分类
-func (categoryId *CategoryId) CategoryDel() int {
+func (categoryId *CategoryId) DelCategory() int {
 	id := map[string]interface{}{"id": categoryId.ID}
 	isExist := model.ExistCategory(id)
 	if isExist == false {
@@ -53,8 +53,8 @@ func (categoryId *CategoryId) CategoryDel() int {
 	return error.SUCCESS
 }
 
-//编辑分类
-func (categoryId *CategoryId) CategoryEdit() (model.Category, int) {
+//获取分类
+func (categoryId *CategoryId) GetCategory() (model.Category, int) {
 	category, err := model.GetCategory(map[string]interface{}{"id": categoryId.ID})
 	if err != nil {
 		return category, error.ERROR_NOT_EXIST_CATEGORY
@@ -63,7 +63,7 @@ func (categoryId *CategoryId) CategoryEdit() (model.Category, int) {
 }
 
 //保存分类
-func (category *Category) CategorySave() int {
+func (category *Category) SaveCategory() int {
 	id := category.ID
 	categoryInfo := model.Category{
 		ParentId: category.ParentId,

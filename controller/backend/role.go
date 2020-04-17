@@ -6,7 +6,6 @@ import (
 	"ClockInLite/package/error"
 	"ClockInLite/service"
 	"ClockInLite/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -31,10 +30,10 @@ func GetRoleList(c *gin.Context) {
 }
 
 //添加角色
-func RoleAdd(c *gin.Context) {
+func AddRole(c *gin.Context) {
 	var role service.RoleMenu
 	if err := c.ShouldBindJSON(&role); err == nil {
-		resCode := role.RoleAdd()
+		resCode := role.AddRole()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
@@ -42,24 +41,24 @@ func RoleAdd(c *gin.Context) {
 }
 
 //删除角色
-func RoleDel(c *gin.Context) {
+func DelRole(c *gin.Context) {
 	var role service.RoleId
 	if err := c.ShouldBindJSON(&role); err == nil {
-		resCode := role.RoleDel()
+		resCode := role.DelRole()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
 
-//编辑角色页
-func RoleEdit(c *gin.Context) {
+//获取角色页
+func GetRole(c *gin.Context) {
 	var role service.RoleId
 	id, err := strconv.Atoi(c.Query("id"))
 
 	if id != 0 || err != nil {
 		role.ID = id
-		if info, errCode := role.RoleEdit(); errCode != 200 {
+		if info, errCode := role.GetRole(); errCode != 200 {
 			util.JsonErrResponse(c, errCode)
 		} else {
 			menus, _ := model.GetMenus(map[string]interface{}{})
@@ -82,21 +81,19 @@ func RoleEdit(c *gin.Context) {
 	}
 }
 
-func MyMenus(c *gin.Context) {
+func GetRoleMenus(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
-
 	myMenus, _ := model.GetRoleMenus(map[string]interface{}{"role_id": id})
 	util.JsonSuccessResponse(c, myMenus)
 }
 
 //保存角色
-func RoleSave(c *gin.Context) {
+func SaveRole(c *gin.Context) {
 	var role service.RoleInfo
 	if err := c.ShouldBindJSON(&role); err == nil {
-		resCode := role.RoleSave()
+		resCode := role.SaveRole()
 		util.HtmlResponse(c, resCode)
 	} else {
-		fmt.Println(err)
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
