@@ -37,6 +37,7 @@ func UploadImg(c *gin.Context) {
 		}
 
 		data := map[string]string{
+			"imgName": image.Filename,
 			"imgUrl":  upload.GetImageFullUrl(imageName),
 			"imgPath": savePath + imageName,
 		}

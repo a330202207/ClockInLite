@@ -6,10 +6,12 @@ import (
 	"ClockInLite/util"
 	"fmt"
 	"log"
+	"math/rand"
 	"mime/multipart"
 	"os"
 	"path"
 	"strings"
+	"time"
 )
 
 func GetImageFullUrl(name string) string {
@@ -20,7 +22,9 @@ func GetImageFullUrl(name string) string {
 func GetImageName(name string) string {
 	ext := path.Ext(name)
 	fileName := strings.TrimSuffix(name, ext)
-	fileName = util.EncodeMD5(fileName)
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	str := string(byte(r.Intn(26)))
+	fileName = util.EncodeMD5(str + fileName)
 
 	return fileName + ext
 }
