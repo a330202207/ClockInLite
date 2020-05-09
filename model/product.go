@@ -58,8 +58,9 @@ func AddProduct(product *Product, imgs []string) (err error) {
 	return tx.Commit().Error
 }
 
+//添加商品图片
 func addProductImg(productId int, imgs []string) (err error) {
-	str := []string{"admin_id", "role_id"}
+	str := []string{"product_id", "img"}
 	newArr := [][]string{}
 	for _, v := range imgs {
 		Arr := append([]string{strconv.Itoa(productId)}, v)
@@ -76,16 +77,37 @@ func addProductImg(productId int, imgs []string) (err error) {
 	val := strings.TrimRight(newStr, ",")
 
 	sql := util.BatchInsert("api_product_img", key, val)
-	fmt.Println("sql", sql)
-	//err = DB.Exec(sql).Error
-
+	err = DB.Exec(sql).Error
 	return
 }
 
 //删除商品
 func DelProduct(id int) (err error) {
-	err = DB.Where("id = ?").Unscoped().Delete(&Product{}).Error
-	return
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//删除商品
+	if err := DB.Where("id = ?", id).Unscoped().Delete(&Product{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除图片
+	if err := DB.Where("product_id = ?", id).Unscoped().Delete(&ProductImg{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 //商品是否存在
@@ -101,6 +123,7 @@ func ExistProduct(maps interface{}) bool {
 //商品列表
 func GetProductList(Limit, Offset int, order string, query interface{}, args ...interface{}) (list []Product, count int, err error) {
 	err = DB.Unscoped().Where(query, args...).Order(order).Limit(Limit).Offset(Offset).Preload("Img").Preload("CategoryInfo").Find(&list).Error
+	DB.Unscoped().Model(&Product{}).Where(query, args...).Count(&count)
 	return
 }
 
@@ -113,7 +136,41 @@ func GetProduct(maps interface{}) (product Product, err error) {
 }
 
 //保存商品
-func SaveProduct(id int, product Product) (err error) {
-	err = DB.Model(&product).Where("id = ?", id).Updates(product).Error
+func SaveProduct(id int, product Product, imgs []string) (err error) {
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := DB.Model(&product).Where("id = ?", id).Unscoped().Updates(product).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除图片
+	if err := DB.Where("product_id = ?", id).Unscoped().Delete(&ProductImg{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//添加图片
+	if err := addProductImg(id, imgs); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+//商品上下架
+func UpdateProductStatus(id int, product Product) (err error) {
+	err = DB.Model(&product).Where("id = ?", id).Unscoped().Updates(product).Error
 	return
 }

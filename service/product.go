@@ -25,6 +25,11 @@ type Product struct {
 	ProductInfo
 }
 
+type ProductStatus struct {
+	ProductId
+	Status int `form:"status"  json:"status"  binding:"required"`
+}
+
 //添加商品
 func (productInfo *ProductInfo) AddProduct() int {
 	whereMaps := map[string]interface{}{"name": productInfo.Name, "category_id": productInfo.CategoryId}
@@ -74,17 +79,29 @@ func (productId *ProductId) GetProduct() (model.Product, int) {
 
 //保存商品
 func (product *Product) ProductSave() int {
-	id := product.ID
+	id := product.ProductId.ID
 	productInfo := model.Product{
-		CategoryId: product.CategoryId,
-		Name:       product.Name,
-		Details:    product.Details,
-		Price:      product.Price,
-		Num:        product.Num,
-		Status:     product.Status,
-		OrderBy:    product.OrderBy,
+		CategoryId: product.ProductInfo.CategoryId,
+		Name:       product.ProductInfo.Name,
+		Details:    product.ProductInfo.Details,
+		Price:      product.ProductInfo.Price,
+		Num:        product.ProductInfo.Num,
+		Status:     product.ProductInfo.Status,
+		OrderBy:    product.ProductInfo.OrderBy,
 	}
-	if err := model.SaveProduct(id, productInfo); err != nil {
+	if err := model.SaveProduct(id, productInfo, product.ProductInfo.Imgs); err != nil {
+		return error.ERROR_SQL_UPDATE_FAIL
+	}
+	return error.SUCCESS
+}
+
+//更新商品状态
+func (productStatus *ProductStatus) UpdateProductStatus() int {
+	id := productStatus.ID
+	productInfo := model.Product{
+		Status: productStatus.Status,
+	}
+	if err := model.UpdateProductStatus(id, productInfo); err != nil {
 		return error.ERROR_SQL_UPDATE_FAIL
 	}
 	return error.SUCCESS

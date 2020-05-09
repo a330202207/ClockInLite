@@ -108,10 +108,13 @@ func RegisterAdminRouter(e *gin.Engine) {
 		admin.POST("/del/product", backend.DelProduct)
 
 		//保存商品
-		admin.POST("/save/product/", backend.SaveProduct)
+		admin.POST("/save/product", backend.SaveProduct)
+
+		//商品上下架
+		admin.POST("/updateStatus/product", backend.UpdateProductStatus)
 
 		//添加商品
-		admin.POST("/add/product/", backend.AddProduct)
+		admin.POST("/add/product", backend.AddProduct)
 
 		//上传图片
 		admin.POST("/upload/img", backend.UploadImg)
@@ -121,6 +124,5 @@ func RegisterAdminRouter(e *gin.Engine) {
 
 		//删除图片（软删除）
 		admin.POST("/move/img", backend.MoveImg)
-
 	}
 }

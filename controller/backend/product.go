@@ -37,7 +37,7 @@ func GetProductList(c *gin.Context) {
 	}
 
 	query, args, _ := util.WhereBuild(data)
-	Product, count, _ := model.GetProductList(pageSize, Offset, "id asc", query, args...)
+	Product, count, _ := model.GetProductList(pageSize, Offset, "order_by asc,created_at", query, args...)
 
 	util.JsonSuccessPage(c, count, Product)
 }
@@ -85,6 +85,17 @@ func SaveProduct(c *gin.Context) {
 	var product service.Product
 	if err := c.ShouldBindJSON(&product); err == nil {
 		resCode := product.ProductSave()
+		util.HtmlResponse(c, resCode)
+	} else {
+		util.JsonErrResponse(c, error.INVALID_PARAMS)
+	}
+}
+
+//商品上下架
+func UpdateProductStatus(c *gin.Context) {
+	var productStatus service.ProductStatus
+	if err := c.ShouldBindJSON(&productStatus); err == nil {
+		resCode := productStatus.UpdateProductStatus()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
