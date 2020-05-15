@@ -17,7 +17,7 @@ type TopMenuInfo struct {
 }
 
 type SubMenuInfo struct {
-	ParentId int `form:"p_id" json:"p_id" binding:"required"`
+	ParentId int `form:"parent_id" json:"parent_id" binding:"required"`
 	TopMenuInfo
 	MenuRouter string `form:"menu_router" json:"menu_router" binding:"required"`
 }

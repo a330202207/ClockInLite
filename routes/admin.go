@@ -47,8 +47,8 @@ func RegisterAdminRouter(e *gin.Engine) {
 		//删除角色
 		admin.POST("/del/role", backend.DelRole)
 
-		//获取角色页
-		admin.GET("/get/role", backend.GetRole)
+		//获取所有角色
+		admin.GET("/get/all/role", backend.GetAllRole)
 
 		//保存角色
 		admin.POST("/save/role", backend.SaveRole)
@@ -63,10 +63,10 @@ func RegisterAdminRouter(e *gin.Engine) {
 		admin.GET("/menu/menus", backend.GetTreeMenus)
 
 		//添加顶级菜单
-		admin.POST("/menu/addTop", backend.TopMenuAdd)
+		admin.POST("/menu/add/topMenu", backend.TopMenuAdd)
 
 		//添加子菜单
-		admin.POST("/menu/addSub", backend.SubMenuAdd)
+		admin.POST("/menu/add/subMenu", backend.SubMenuAdd)
 
 		//删除菜单
 		admin.POST("/del/menu", backend.DelMenu)

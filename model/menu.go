@@ -2,7 +2,7 @@ package model
 
 type Menu struct {
 	ID         int    `gorm:"primary_key" json:"id"`
-	ParentId   int    `gorm:"default:0"   json:"p_id"`        //上级ID
+	ParentId   int    `gorm:"default:0"   json:"parent_id"`   //上级ID
 	Name       string `gorm:"default:''"  json:"name"`        //菜单名称
 	MenuRouter string `gorm:"default:''"  json:"menu_router"` //菜单访问路由
 	OrderBy    int    `gorm:"default:'0'" json:"order_by"`    //排序
@@ -12,7 +12,7 @@ type Menu struct {
 
 type TreeMenus struct {
 	ID         int          `json:"id"`
-	ParentId   int          `json:"p_id"`        //上级ID
+	ParentId   int          `json:"parent_id"`   //上级ID
 	Name       string       `json:"text"`        //菜单名称
 	MenuRouter string       `json:"menu_router"` //菜单访问路由
 	OrderBy    int          `json:"order_by"`    //菜单访问路由
@@ -45,8 +45,8 @@ func GetMenus(maps interface{}) (menu []Menu, err error) {
 }
 
 //获取菜单树
-func (r *Menu) GetTreeMenus(pid interface{}) []*TreeMenus {
-	menus, _ := GetMenus(map[string]interface{}{"p_id": pid})
+func (r *Menu) GetTreeMenus(parentId interface{}) []*TreeMenus {
+	menus, _ := GetMenus(map[string]interface{}{"parent_id": parentId})
 
 	treeList := []*TreeMenus{}
 
@@ -64,6 +64,7 @@ func (r *Menu) GetTreeMenus(pid interface{}) []*TreeMenus {
 
 		treeList = append(treeList, node)
 	}
+
 	return treeList
 }
 

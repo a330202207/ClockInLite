@@ -54,3 +54,9 @@ func SaveRole(id int, role Role) (err error) {
 	err = DB.Model(&role).Where("id = ?", id).Updates(role).Error
 	return
 }
+
+//修改角色状态
+func UpdateRoleStatus(id int, role Role) (err error) {
+	err = DB.Model(&role).Where("id = ?", id).Unscoped().Updates(role).Error
+	return
+}

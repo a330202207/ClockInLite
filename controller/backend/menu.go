@@ -6,6 +6,7 @@ import (
 	"ClockInLite/package/error"
 	"ClockInLite/service"
 	"ClockInLite/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -110,5 +111,6 @@ func SaveSubMenu(c *gin.Context) {
 //获取菜单树
 func GetTreeMenus(c *gin.Context) {
 	list := service.GetTreeMenus()
+	fmt.Println(list)
 	util.JsonSuccessResponse(c, list)
 }

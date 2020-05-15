@@ -51,40 +51,18 @@ func DelRole(c *gin.Context) {
 	}
 }
 
-//获取角色页
-func GetRole(c *gin.Context) {
-	var role service.RoleId
-	id, err := strconv.Atoi(c.Query("id"))
-
-	if id != 0 || err != nil {
-		role.ID = id
-		if info, errCode := role.GetRole(); errCode != 200 {
-			util.JsonErrResponse(c, errCode)
-		} else {
-			menus, _ := model.GetMenus(map[string]interface{}{})
-			myMenus, _ := model.GetRoleMenus(map[string]interface{}{"role_id": id})
-
-			type RoleEditInfo struct {
-				Menus   interface{} `json:"menus"`
-				MyMenus interface{} `json:"my_menus"`
-				Info    interface{} `json:"role_info"`
-			}
-
-			util.JsonSuccessResponse(c, RoleEditInfo{
-				Menus:   menus,
-				MyMenus: myMenus,
-				Info:    info,
-			})
-		}
-	} else {
-		util.JsonErrResponse(c, error.INVALID_PARAMS)
-	}
-}
-
+//获取角色菜单
 func GetRoleMenus(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("id"))
 	myMenus, _ := model.GetRoleMenus(map[string]interface{}{"role_id": id})
 	util.JsonSuccessResponse(c, myMenus)
+}
+
+//获取所有角色
+func GetAllRole(c *gin.Context) {
+	//全部角色
+	roles, _ := model.GetAllRoles()
+	util.JsonSuccessResponse(c, roles)
 }
 
 //保存角色
