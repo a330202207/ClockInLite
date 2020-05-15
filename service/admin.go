@@ -35,10 +35,10 @@ type Password struct {
 }
 
 type AdminInfo struct {
-	Phone    string   `json:"phone"`
-	CreateIp string   `json:"login_ip"`
-	RoleIDs  []string `form:"role_ids" json:"role_ids" binding:"required"`
-	Status   int      `form:"status" json:"status" binding:"required"`
+	Phone    string `form:"phone" json:"phone" binding:"required"`
+	CreateIp string `json:"login_ip"`
+	RoleID   int    `form:"role_ids" json:"role_id" binding:"required"`
+	Status   int    `form:"status" json:"status" binding:"required"`
 }
 
 type LoggedInfo struct {
@@ -101,16 +101,13 @@ func (admin *Admin) AddAdmin() int {
 
 	adminInfo := model.Admin{
 		UserName: admin.UserName.UserName,
+		Phone:    admin.AdminInfo.Phone,
 		CreateIp: admin.CreateIp,
 		Password: hashPassword,
 	}
 
-	adminId, err := model.AddAdmin(&adminInfo)
-	if err != nil {
-		return error.ERROR_SQL_INSERT_FAIL
-	}
-
-	if model.AddAdminRole(adminId, admin.AdminInfo.RoleIDs) != nil {
+	//添加管理员
+	if err := model.AddAdmin(&adminInfo, admin.AdminInfo.RoleID); err != nil {
 		return error.ERROR_SQL_INSERT_FAIL
 	}
 
@@ -128,18 +125,14 @@ func SetPassword(password string) (string, bool) {
 
 //删除管理员
 func (adminId *AdminId) DelAdmin() int {
-	whereMap := map[string]interface{}{"id": adminId.ID, "status": 1}
+	whereMap := map[string]interface{}{"id": adminId.ID}
 	isExist := model.ExistAdmin(whereMap)
 	if isExist == false {
 		return error.ERROR_NOT_EXIST_USER
 	}
 
-	err := model.DelAdmin(map[string]interface{}{"id": adminId.ID})
+	err := model.DelAdmin(adminId.ID)
 	if err != nil {
-		return error.ERROR_SQL_DELETE_FAIL
-	}
-
-	if err := model.DelAdminRole(adminId.ID); err != nil {
 		return error.ERROR_SQL_DELETE_FAIL
 	}
 
@@ -162,17 +155,8 @@ func (account *Account) SaveAdmin() int {
 		UserName: account.UserName.UserName,
 		Status:   account.AdminInfo.Status,
 	}
-	if err := model.SaveAdmin(id, admin); err != nil {
+	if err := model.SaveAdmin(id, account.AdminInfo.RoleID, admin); err != nil {
 		return error.ERROR_SQL_UPDATE_FAIL
 	}
-
-	if err := model.DelAdminRole(id); err != nil {
-		return error.ERROR_SQL_UPDATE_FAIL
-	}
-
-	if err := model.AddAdminRole(id, account.AdminInfo.RoleIDs); err != nil {
-		return error.ERROR_SQL_UPDATE_FAIL
-	}
-
 	return error.SUCCESS
 }

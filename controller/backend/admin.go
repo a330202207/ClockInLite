@@ -6,6 +6,7 @@ import (
 	"ClockInLite/package/error"
 	"ClockInLite/service"
 	"ClockInLite/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -37,6 +38,7 @@ func AddAdmin(c *gin.Context) {
 		resCode := admin.AddAdmin()
 		util.HtmlResponse(c, resCode)
 	} else {
+		fmt.Println(err)
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
@@ -52,7 +54,7 @@ func DelAdmin(c *gin.Context) {
 	}
 }
 
-//获取管理员页
+//获取管理员
 func GetAdmin(c *gin.Context) {
 	var admin service.AdminId
 	id, err := strconv.Atoi(c.Query("id"))
@@ -63,21 +65,17 @@ func GetAdmin(c *gin.Context) {
 		if info, errCode := admin.GetAdmin(); errCode != 200 {
 			util.JsonErrResponse(c, errCode)
 		} else {
-			//全部角色
-			roles, _ := model.GetAllRoles()
 
 			//我的角色
-			myRoles, _ := model.GetAdminRoles(map[string]interface{}{"admin_id": admin.ID})
+			myRoles, _ := model.GetAdminRole(map[string]interface{}{"admin_id": admin.ID})
 			type AdminEditInfo struct {
-				RolesInfo interface{} `json:"roles"`
-				MyRoles   interface{} `json:"my_roles"`
-				Info      interface{} `json:"admin_info"`
+				MyRoles interface{} `json:"my_role"`
+				Info    interface{} `json:"admin_info"`
 			}
 
 			util.JsonSuccessResponse(c, AdminEditInfo{
-				RolesInfo: roles,
-				MyRoles:   myRoles,
-				Info:      info,
+				MyRoles: myRoles,
+				Info:    info,
 			})
 		}
 	} else {

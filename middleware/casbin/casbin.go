@@ -77,12 +77,14 @@ func AddRoleForUser(adminId int) (err error) {
 	}
 	Enforcer.DeleteRolesForUser(convert.ToString(adminId))
 
-	list, err := model.GetAdminRoles(map[string]interface{}{"admin_id": adminId})
+	role, err := model.GetAdminRole(map[string]interface{}{"admin_id": adminId})
 	if err != nil {
 		return
 	}
-	for _, v := range list {
-		Enforcer.AddRoleForUser(convert.ToString(adminId), convert.ToString(v.RoleID))
-	}
+
+	Enforcer.AddRoleForUser(convert.ToString(adminId), convert.ToString(role.RoleID))
+	//for _, v := range list {
+	//	Enforcer.AddRoleForUser(convert.ToString(adminId), convert.ToString(v.RoleID))
+	//}
 	return
 }

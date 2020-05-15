@@ -48,9 +48,9 @@ func AddProduct(product *Product, imgs []string) (err error) {
 		return err
 	}
 
-	ProductId := product.ID
+	productId := product.ID
 
-	if err := addProductImg(ProductId, imgs); err != nil {
+	if err := addProductImg(productId, imgs); err != nil {
 		tx.Rollback()
 		return err
 	}

@@ -13,8 +13,8 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH_TOKEN:               "Token生成失败",
 	ERROR_AUTH:                     "Token错误",
 
-	ERROR_EXIST_USER:     "用户已经存在了",
-	ERROR_NOT_EXIST_USER: "用户名或密码错误",
+	ERROR_EXIST_USER:     "用户已存在",
+	ERROR_NOT_EXIST_USER: "用户不存在",
 	ERROR_DISABLE_USER:   "用户已被禁止，请联系管理员",
 	ERROR_PASSWORD_USER:  "密码加密失败",
 

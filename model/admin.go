@@ -41,22 +41,95 @@ func GetAdminList(Limit, Offset int, order string, query interface{}, args ...in
 }
 
 //添加管理员
-func AddAdmin(admin *Admin) (id int, err error) {
-	err = DB.Create(admin).Error
-	id = admin.ID
-	return
+func AddAdmin(admin *Admin, roleId int) (err error) {
+
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := DB.Create(admin).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	adminRole := AdminRole{
+		AdminID: admin.ID,
+		RoleID:  roleId,
+	}
+
+	if err := AddAdminRole(&adminRole); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 //删除管理员
-func DelAdmin(maps interface{}) (err error) {
-	err = DB.Model(&Admin{}).Unscoped().Where(maps).Update("status", 3).Error
+func DelAdmin(id int) (err error) {
+
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//删除管理员
+	if err := DB.Where("id = ?", id).Unscoped().Delete(&Admin{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除关联角色
+	if err := DB.Model(&AdminRole{}).Where("admin_id = ?", id).Unscoped().Delete(&AdminRole{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return
 }
 
 //保存管理员
-func SaveAdmin(id int, admin Admin) (err error) {
-	err = DB.Unscoped().Model(&admin).Where("id = ?", id).Updates(admin).Error
-	return
+func SaveAdmin(adminId int, roleID int, admin Admin) (err error) {
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//保存管理员
+	if err := DB.Unscoped().Model(&admin).Where("id = ?", adminId).Updates(admin).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//更新角色
+	if err := SaveAdminRole(adminId, roleID); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 //更新登陆信息
