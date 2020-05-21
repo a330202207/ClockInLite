@@ -11,12 +11,11 @@ type Menu struct {
 }
 
 type TreeMenus struct {
-	ID         int          `json:"id"`
-	ParentId   int          `json:"parent_id"`   //上级ID
-	Name       string       `json:"text"`        //菜单名称
-	MenuRouter string       `json:"menu_router"` //菜单访问路由
-	OrderBy    int          `json:"order_by"`    //菜单访问路由
-	Children   []*TreeMenus `json:"children"`
+	ID       int          `json:"key"`
+	ParentId int          `json:"parent_id"` //上级ID
+	Name     string       `json:"title"`     //菜单名称
+	OrderBy  int          `json:"order_by"`  //菜单访问路由
+	Children []*TreeMenus `json:"children"`
 }
 
 //添加菜单
@@ -26,9 +25,9 @@ func AddMenu(menu *Menu) (err error) {
 }
 
 //获取菜单列表
-func GetMenuList(Limit, Offset int, order string) (list []Menu, count int, err error) {
-	err = DB.Unscoped().Order(order).Limit(Limit).Offset(Offset).Find(&list).Error
-	DB.Unscoped().Model(&Menu{}).Count(&count)
+func GetMenuList(Limit, Offset int, order string, query interface{}, args ...interface{}) (list []Menu, count int, err error) {
+	err = DB.Unscoped().Where(query, args...).Order(order).Limit(Limit).Offset(Offset).Find(&list).Error
+	DB.Unscoped().Where(query, args...).Model(&Menu{}).Count(&count)
 	return
 }
 
@@ -45,7 +44,7 @@ func GetMenus(maps interface{}) (menu []Menu, err error) {
 }
 
 //获取菜单树
-func (r *Menu) GetTreeMenus(parentId interface{}) []*TreeMenus {
+func (menu *Menu) GetTreeMenus(parentId int) []*TreeMenus {
 	menus, _ := GetMenus(map[string]interface{}{"parent_id": parentId})
 
 	treeList := []*TreeMenus{}
@@ -54,11 +53,11 @@ func (r *Menu) GetTreeMenus(parentId interface{}) []*TreeMenus {
 
 		child := v.GetTreeMenus(v.ID)
 		node := &TreeMenus{
-			ID:         v.ID,
-			ParentId:   v.ParentId,
-			Name:       v.Name,
-			MenuRouter: v.MenuRouter,
-			OrderBy:    v.OrderBy,
+			ID: v.ID,
+			//ParentId:   v.ParentId,
+			Name: v.Name,
+			//MenuRouter: v.MenuRouter,
+			//OrderBy:    v.OrderBy,
 		}
 		node.Children = child
 

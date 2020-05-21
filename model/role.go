@@ -3,8 +3,7 @@ package model
 type Role struct {
 	Model
 
-	Name   string `gorm:"default:''" json:"name"` //角色名称
-	Status int    `gorm:"default:1" json:"status"`
+	Name string `gorm:"default:''" json:"name"` //角色名称
 }
 
 //获取角色
@@ -32,7 +31,7 @@ func GetRoleList(Limit, Offset int, order string, query interface{}, args ...int
 
 //获取全部角色
 func GetAllRoles() (roles []Role, err error) {
-	err = DB.Unscoped().Where("status = ?", 1).Find(&roles).Error
+	err = DB.Unscoped().Find(&roles).Error
 	return
 }
 
@@ -44,9 +43,32 @@ func AddRole(role *Role) (id int, err error) {
 }
 
 //删除角色
-func DelRole(maps interface{}) (err error) {
-	err = DB.Model(&Role{}).Unscoped().Where(maps).Update("status", 2).Error
-	return
+func DelRole(id int) (err error) {
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//删除角色
+	if err := DB.Where("id = ?", id).Unscoped().Delete(&Role{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除角色-菜单
+	if err := DB.Model(&AdminRole{}).Where("role_id = ?", id).Unscoped().Delete(&RoleMenu{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 //保存角色

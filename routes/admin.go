@@ -60,13 +60,10 @@ func RegisterAdminRouter(e *gin.Engine) {
 		admin.GET("/get/menuList", backend.GetMenuList)
 
 		//获取菜单树结构
-		admin.GET("/menu/menus", backend.GetTreeMenus)
+		admin.GET("/get/treeMenus", backend.GetTreeMenus)
 
-		//添加顶级菜单
-		admin.POST("/menu/add/topMenu", backend.TopMenuAdd)
-
-		//添加子菜单
-		admin.POST("/menu/add/subMenu", backend.SubMenuAdd)
+		//添加菜单
+		admin.POST("/add/menu", backend.AddMenu)
 
 		//删除菜单
 		admin.POST("/del/menu", backend.DelMenu)
@@ -74,11 +71,8 @@ func RegisterAdminRouter(e *gin.Engine) {
 		//获取菜单页
 		admin.GET("/get/menu", backend.GetMenu)
 
-		//保存顶级菜单
-		admin.POST("/save/topMenu", backend.SaveTopMenu)
-
-		//保存子菜单
-		admin.POST("/save/subMenu/", backend.SaveSubMenu)
+		//保存菜单
+		admin.POST("/save/menu", backend.SaveMenu)
 
 		//添加分类
 		admin.POST("/add/category", backend.AddCategory)

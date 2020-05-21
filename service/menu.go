@@ -3,68 +3,38 @@ package service
 import (
 	"ClockInLite/model"
 	"ClockInLite/package/error"
-	"encoding/json"
-	"fmt"
 )
 
 type MenuId struct {
 	ID int `form:"id" json:"id" binding:"required"`
 }
 
-type TopMenuInfo struct {
-	Name    string `form:"name" json:"name" binding:"required"`
-	OrderBy int    `form:"order_by" json:"order_by" binding:"required"`
-}
-
-type SubMenuInfo struct {
-	ParentId int `form:"parent_id" json:"parent_id" binding:"required"`
-	TopMenuInfo
+type MenuInfo struct {
+	ParentId   int    `form:"parent_id" json:"parent_id"`
+	Name       string `form:"name" json:"name" binding:"required"`
 	MenuRouter string `form:"menu_router" json:"menu_router" binding:"required"`
+	OrderBy    int    `form:"order_by" json:"order_by"`
 }
 
-type TopMenu struct {
+type Menu struct {
 	MenuId
-	TopMenuInfo
+	MenuInfo
 }
 
-type SubMenu struct {
-	MenuId
-	SubMenuInfo
-}
-
-//添加顶级菜单
-func (menuInfo *TopMenuInfo) TopMenuAdd() int {
+//添加菜单
+func (menuInfo *MenuInfo) AddMenu() int {
 	whereMaps := map[string]interface{}{"name": menuInfo.Name}
 	isExist := model.ExistMenu(whereMaps)
 	if isExist == true {
 		return error.ERROR_EXIST_MENU
 	}
-	menu := model.Menu{
-		Name:    menuInfo.Name,
-		OrderBy: menuInfo.OrderBy,
-	}
-	if err := model.AddMenu(&menu); err != nil {
-		return error.ERROR_SQL_INSERT_FAIL
-	}
-	return error.SUCCESS
-}
-
-//添加子菜单
-func (menuInfo *SubMenuInfo) SubMenuAdd() int {
-	whereMaps := map[string]interface{}{"name": menuInfo.Name}
-	isExist := model.ExistMenu(whereMaps)
-	if isExist == true {
-		return error.ERROR_EXIST_MENU
-	}
-
 	menu := model.Menu{
 		ParentId:   menuInfo.ParentId,
 		Name:       menuInfo.Name,
-		MenuRouter: menuInfo.MenuRouter,
 		OrderBy:    menuInfo.OrderBy,
+		MenuRouter: menuInfo.MenuRouter,
 	}
 	if err := model.AddMenu(&menu); err != nil {
-		fmt.Println(err)
 		return error.ERROR_SQL_INSERT_FAIL
 	}
 	return error.SUCCESS
@@ -95,28 +65,16 @@ func (menuInfo *MenuId) GetMenu() (model.Menu, int) {
 }
 
 //保存顶级菜单
-func (topMenu *TopMenu) SaveTopMenu() int {
-	id := topMenu.ID
-	menu := model.Menu{
-		Name:    topMenu.Name,
-		OrderBy: topMenu.OrderBy,
-	}
-	if err := model.SaveMenu(id, menu); err != nil {
-		return error.ERROR_SQL_UPDATE_FAIL
-	}
-	return error.SUCCESS
-}
+func (menu *Menu) SaveMenu() int {
+	id := menu.ID
 
-//保存子菜单
-func (menuInfo *SubMenu) SaveSubMenu() int {
-	id := menuInfo.ID
-	menu := model.Menu{
-		ParentId:   menuInfo.ParentId,
-		Name:       menuInfo.Name,
-		MenuRouter: menuInfo.MenuRouter,
-		OrderBy:    menuInfo.OrderBy,
+	menuInfo := model.Menu{
+		ParentId:   menu.ParentId,
+		Name:       menu.Name,
+		MenuRouter: menu.MenuRouter,
+		OrderBy:    menu.OrderBy,
 	}
-	if err := model.SaveMenu(id, menu); err != nil {
+	if err := model.SaveMenu(id, menuInfo); err != nil {
 		return error.ERROR_SQL_UPDATE_FAIL
 	}
 	return error.SUCCESS
@@ -129,13 +87,16 @@ func GetAdminMenus(adminId int) (list []model.Menu) {
 }
 
 //获取菜单树
-func GetTreeMenus() string {
-	var menu model.Menu
-	list := menu.GetTreeMenus(0)
-
-	body, err := json.Marshal(list)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return string(body)
-}
+//func GetTreeMenus() string {
+//	var menu model.Menu
+//	list := menu.GetTreeMenus(0)
+//	//fmt.Println("list:", list)
+//	//
+//	//body, err := json.Marshal(list)
+//	//fmt.Println("body:", body)
+//	//if err != nil {
+//	//	fmt.Println(err)
+//	//}
+//	//return string(body)
+//	return list
+//}

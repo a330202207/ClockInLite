@@ -29,6 +29,7 @@ func DelAdminRole(adminID int) (err error) {
 	return
 }
 
+//保存管理员角色
 func SaveAdminRole(adminID int, roleID int) (err error) {
 	err = DB.Model(&AdminRole{}).Where("admin_id = ?", adminID).Unscoped().Delete(&AdminRole{}).Error
 	return

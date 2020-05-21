@@ -12,7 +12,7 @@ import (
 
 //角色列表页
 func GetRoleList(c *gin.Context) {
-	data := map[string]interface{}{"status <": 2}
+	data := map[string]interface{}{}
 	name := c.DefaultQuery("keyword", "")
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 

@@ -8,39 +8,37 @@ import (
 	"ClockInLite/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 )
 
 //菜单列表页
 func GetMenuList(c *gin.Context) {
+	data := map[string]interface{}{}
+	parentId, _ := strconv.Atoi(c.DefaultQuery("parent_id", "0"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", strconv.Itoa(config.ServerSetting.PageSize)))
 
 	Offset := (page - 1) * pageSize
-
-	Menus, count, _ := model.GetMenuList(pageSize, Offset, "id asc")
+	if parentId != 0 {
+		data["parent_id"] = parentId
+	} else {
+		data["parent_id"] = 0
+	}
+	query, args, _ := util.WhereBuild(data)
+	Menus, count, _ := model.GetMenuList(pageSize, Offset, "order_by asc,created_at", query, args)
 
 	util.JsonSuccessPage(c, count, Menus)
 }
 
-//添加顶级菜单
-func TopMenuAdd(c *gin.Context) {
-	var menu service.TopMenuInfo
+//添加菜单
+func AddMenu(c *gin.Context) {
+	var menu service.MenuInfo
 	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.TopMenuAdd()
+		resCode := menu.AddMenu()
 		util.HtmlResponse(c, resCode)
 	} else {
-		util.JsonErrResponse(c, error.INVALID_PARAMS)
-	}
-}
-
-//添加子菜单
-func SubMenuAdd(c *gin.Context) {
-	var menu service.SubMenuInfo
-	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.SubMenuAdd()
-		util.HtmlResponse(c, resCode)
-	} else {
+		fmt.Println(err)
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
 	}
 }
@@ -86,22 +84,11 @@ func GetMenu(c *gin.Context) {
 	}
 }
 
-//保存顶级菜单
-func SaveTopMenu(c *gin.Context) {
-	var menu service.TopMenu
+//保存菜单
+func SaveMenu(c *gin.Context) {
+	var menu service.Menu
 	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.SaveTopMenu()
-		util.HtmlResponse(c, resCode)
-	} else {
-		util.JsonErrResponse(c, error.INVALID_PARAMS)
-	}
-}
-
-//保存子菜单
-func SaveSubMenu(c *gin.Context) {
-	var menu service.SubMenu
-	if err := c.ShouldBindJSON(&menu); err == nil {
-		resCode := menu.SaveSubMenu()
+		resCode := menu.SaveMenu()
 		util.HtmlResponse(c, resCode)
 	} else {
 		util.JsonErrResponse(c, error.INVALID_PARAMS)
@@ -110,7 +97,18 @@ func SaveSubMenu(c *gin.Context) {
 
 //获取菜单树
 func GetTreeMenus(c *gin.Context) {
-	list := service.GetTreeMenus()
-	fmt.Println(list)
-	util.JsonSuccessResponse(c, list)
+	var menu model.Menu
+	list := menu.GetTreeMenus(0)
+
+	type DataRes struct {
+		Code int                `json:"code"`
+		Msg  string             `json:"msg"`
+		Data []*model.TreeMenus `json:"data"`
+	}
+
+	util.JsonResponse(c, http.StatusOK, DataRes{
+		Code: error.SUCCESS,
+		Msg:  error.GetMsg(error.SUCCESS),
+		Data: list,
+	})
 }

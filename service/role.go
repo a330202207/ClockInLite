@@ -25,15 +25,14 @@ type RoleMenu struct {
 
 //添加角色
 func (roleInfo *RoleMenu) AddRole() int {
-	name := map[string]interface{}{"name": roleInfo.Name, "status": 1}
+	name := map[string]interface{}{"name": roleInfo.Name}
 	isExist := model.ExistRole(name)
 
 	if isExist == true {
 		return error.ERROR_EXIST_ROLE
 	}
 	role := model.Role{
-		Name:   roleInfo.Name,
-		Status: 1,
+		Name: roleInfo.Name,
 	}
 
 	roleID, err := model.AddRole(&role)
@@ -50,18 +49,14 @@ func (roleInfo *RoleMenu) AddRole() int {
 
 //删除角色
 func (role *RoleId) DelRole() int {
-	whereMap := map[string]interface{}{"id": role.ID, "status": 1}
+	whereMap := map[string]interface{}{"id": role.ID}
 	isExist := model.ExistRole(whereMap)
 	if isExist == false {
 		return error.ERROR_SQL_DELETE_FAIL
 	}
 
-	err := model.DelRole(map[string]interface{}{"id": role.ID})
+	err := model.DelRole(role.ID)
 	if err != nil {
-		return error.ERROR_SQL_DELETE_FAIL
-	}
-
-	if model.DelRoleMenu(role.ID) != nil {
 		return error.ERROR_SQL_DELETE_FAIL
 	}
 
