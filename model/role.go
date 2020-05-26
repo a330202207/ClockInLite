@@ -72,9 +72,39 @@ func DelRole(id int) (err error) {
 }
 
 //保存角色
-func SaveRole(id int, role Role) (err error) {
-	err = DB.Model(&role).Where("id = ?", id).Updates(role).Error
-	return
+func SaveRole(id int, role Role, menuIDs []string) (err error) {
+
+	tx := DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	//保存角色
+	if err := DB.Model(&role).Where("id = ?", id).Unscoped().Updates(role).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除角色菜单
+	if err := DB.Model(&AdminRole{}).Where("role_id = ?", id).Unscoped().Delete(&RoleMenu{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//添加角色菜单
+	if err := AddRoleMenu(id, menuIDs); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 //修改角色状态

@@ -1,6 +1,7 @@
 package model
 
 type AdminRole struct {
+	ID      int `gorm:"primary_key" json:"id"`
 	AdminID int `gorm:"default:0" json:"admin_id"`
 	RoleID  int `gorm:"default:0" json:"role_id"`
 }

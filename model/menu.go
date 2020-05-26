@@ -11,11 +11,12 @@ type Menu struct {
 }
 
 type TreeMenus struct {
-	ID       int          `json:"key"`
-	ParentId int          `json:"parent_id"` //上级ID
-	Name     string       `json:"title"`     //菜单名称
-	OrderBy  int          `json:"order_by"`  //菜单访问路由
-	Children []*TreeMenus `json:"children"`
+	ID         int          `json:"key"`
+	ParentId   int          `json:"parent_id"`   //上级ID
+	Name       string       `json:"title"`       //菜单名称
+	MenuRouter string       `json:"menu_router"` //菜单访问路由
+	OrderBy    int          `json:"order_by"`    //菜单访问路由
+	Children   []*TreeMenus `json:"children"`
 }
 
 //添加菜单
@@ -53,11 +54,11 @@ func (menu *Menu) GetTreeMenus(parentId int) []*TreeMenus {
 
 		child := v.GetTreeMenus(v.ID)
 		node := &TreeMenus{
-			ID: v.ID,
-			//ParentId:   v.ParentId,
-			Name: v.Name,
-			//MenuRouter: v.MenuRouter,
-			//OrderBy:    v.OrderBy,
+			ID:         v.ID,
+			ParentId:   v.ParentId,
+			Name:       v.Name,
+			MenuRouter: v.MenuRouter,
+			OrderBy:    v.OrderBy,
 		}
 		node.Children = child
 

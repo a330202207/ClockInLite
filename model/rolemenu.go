@@ -8,6 +8,7 @@ import (
 )
 
 type RoleMenu struct {
+	ID     int `gorm:"primary_key" json:"id"`
 	RoleID int `gorm:"default:0" json:"role_id"`
 	MenuID int `gorm:"default:0" json:"menu_id"`
 }

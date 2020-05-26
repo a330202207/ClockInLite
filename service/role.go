@@ -78,19 +78,9 @@ func (roleInfo *RoleInfo) SaveRole() int {
 	role := model.Role{
 		Name: roleInfo.Name,
 	}
-	if err := model.SaveRole(id, role); err != nil {
+	if err := model.SaveRole(id, role, roleInfo.MenuIDs); err != nil {
 		return error.ERROR_SQL_UPDATE_FAIL
 	}
-
-	if model.DelRoleMenu(roleInfo.RoleId.ID) != nil {
-		return error.ERROR_SQL_INSERT_FAIL
-	}
-
-	if model.AddRoleMenu(roleInfo.RoleId.ID, roleInfo.MenuIDs) != nil {
-		return error.ERROR_SQL_INSERT_FAIL
-	}
-
-	//添加权限
 
 	return error.SUCCESS
 }
